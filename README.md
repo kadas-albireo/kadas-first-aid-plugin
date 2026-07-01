@@ -1,3 +1,22 @@
+
+# First Aid Plugin for KADAS
+
+## How to use locally 
+
+1) Get the source code using git 
+
+`git clone https://github.com/kadas-albireo/kadas-mbtiles-plugin.git`
+
+2) Create a link from the kadas plugin folder to your local repository folder
+
+e.g : `mklink /J C:\Users\Valentin\AppData\Roaming\Kadas\Kadas\profiles\default\python\plugins\firstaid C:\Users\Valentin\Documents\kadas-albireo\kadas-first-aid-plugin\firstaid`
+
+> Note:  link might differ on other OS than windows
+
+3) In the tab settings next to the plugin manager there is a new button Debug to access the first aid plugin
+
+
+
 # First Aid Plugin for QGIS
 
 <img src="https://raw.githubusercontent.com/wonder-sk/qgis-first-aid-plugin/master/icon.png" align="right">

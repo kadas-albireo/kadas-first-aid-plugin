@@ -6,6 +6,9 @@ from qgis.PyQt.QtCore import QMetaObject, QObject, QThread, Qt, pyqtSlot  # pyli
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QApplication  # pylint: disable=import-error
 
+from kadas.kadasgui import KadasPluginInterface
+
+
 from .debuggerwidget import DebuggerWidget
 from .debugwidget import DebugDialog
 
@@ -77,6 +80,8 @@ class FirstAidPlugin:
         self.old_show_exception = None
         self.debugger_widget = None
 
+        self.iface = KadasPluginInterface.cast(iface)
+
     def initGui(self):  # pylint: disable=invalid-name
         # ReportPlugin also hooks exceptions and needs to be unloaded if active
         # so qgis.utils.showException is the QGIS native one
@@ -94,11 +99,15 @@ class FirstAidPlugin:
 
         icon = QIcon(os.path.join(os.path.dirname(__file__), "icons", "bug.svg"))  # pylint: disable=undefined-variable
         self.action_debugger = QAction(
-            icon, "Debug (Ctrl + F12)", qgis.utils.iface.mainWindow()
+            icon, "Debug", qgis.utils.iface.mainWindow()
         )
-        self.action_debugger.setShortcut("Ctrl+F12")
+        # self.action_debugger.setShortcut("Ctrl+F12")
         self.action_debugger.triggered.connect(self.run_debugger)
-        qgis.utils.iface.addToolBarIcon(self.action_debugger)
+        # qgis.utils.iface.addToolBarIcon(self.action_debugger)
+
+        self.iface.addAction(
+            self.action_debugger, self.iface.PLUGIN_MENU, self.iface.SETTINGS_TAB
+        )
 
         # If ReportPlugin was activated, load and start it again to cooperate
         if report_plugin_active:
@@ -106,8 +115,11 @@ class FirstAidPlugin:
             qgis.utils.startPlugin(report_plugin)
 
     def unload(self):
-        qgis.utils.iface.removeToolBarIcon(self.action_debugger)
-        del self.action_debugger
+        # qgis.utils.iface.removeToolBarIcon(self.action_debugger)
+        # del self.action_debugger
+
+        self.iface.removeAction(self.action_debugger, self.iface.PLUGIN_MENU, self.iface.SETTINGS_TAB)
+
 
         # unhook from exception handling
         qgis.utils.showException = self.old_show_exception
